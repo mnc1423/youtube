@@ -1,17 +1,13 @@
 version: '3.9'
 
 services:
-  training:
+  youtube_api:
     build:
       context: .
       dockerfile: Dockerfile
     volumes:
-      - ./src:/app/
-    networks:
-      - my_network
+      - ./:/app
+
     command: tail -f /dev/null
     environment:
       - PYTHONPATH=/app
-
-networks:
-  my_network:
