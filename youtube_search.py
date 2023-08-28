@@ -32,13 +32,32 @@ def youtube_search(options):
   # matching videos, channels, and playlists.
   for search_result in search_response.get('items', []):
     if search_result['id']['kind'] == 'youtube#video':
-      videos.append('%s (%s)' % (search_result['snippet']['title'],
-                                 search_result['id']['videoId']))
-    pprint(search_result['snippet'])
+      doc = {
+        "videoTitle":search_result['snippet']['title'],
+        "videoID":search_result['id']['videoId']
+      }
+      videos.append(doc)
+      # videos.append('%s (%s)' % (search_result['snippet']['title'],
+      #                            search_result['id']['videoId']))
+    # pprint(search_result['snippet'])
+  return videos
     
 
+def get_description(video_list):
+  youtube = build(YOUTUBE_API_SERVICE_NAME, YOUTUBE_API_VERSION,
+    developerKey=DEVELOPER_KEY)
 #   print('Videos:\n', '\n'.join(videos), '\n')
-
+  response = youtube.videos().list(
+    part='snippet',
+    id=video_id
+  ).execute()
+  if 'items' in response and len(response['items']) > 0:
+    video = response['items'][0]
+    video_title = video['snippet']['title']
+    video_description = video['snippet']['description']
+    print('-'*30)
+    print(video_title)
+    print(video_description)
 
 
 if __name__ == '__main__':
@@ -48,6 +67,7 @@ if __name__ == '__main__':
   args = parser.parse_args()
 
   try:
-    youtube_search(args)
+    videos = youtube_search(args)
+    
   except HttpError as e:
     print ('An HTTP error %d occurred:\n%s' % (e.resp.status, e.content))
