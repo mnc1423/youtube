@@ -3,7 +3,7 @@ import argparse
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 import re
-
+from urlextract import URLExtract
 
 class Youtube_API:
     def __init__(self):
@@ -16,7 +16,8 @@ class Youtube_API:
         parser.add_argument('--q', help='Search term', default='kms tools download')
         parser.add_argument('--max-results', help='Max results', default=10)
         self.args = parser.parse_args()
-        self.url_regex = re.compile("^[-a-zA-Z0-9@:%._\\+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b(?:[-a-zA-Z0-9()@:%_\\+.~#?&\\/=]*)$")
+        self.extractor = URLExtract()
+        # self.url_regex = re.compile("^[-a-zA-Z0-9@:%._\\+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b(?:[-a-zA-Z0-9()@:%_\\+.~#?&\\/=]*)$")
 
     def youtube_search(self):
         search_response = self.youtube.search().list(
@@ -45,7 +46,14 @@ class Youtube_API:
                 video = response['items'][0]
                 video_description = video['snippet']['description']
                 docs['description'] = video_description
+                url_list = self.get_url_pattern(video_description)
+                docs['url_list'] = url_list
         return video_list
+
+    def get_url_pattern(self, line):
+        url_list = self.extractor.find_urls(line)
+        return url_list
+
 
 if __name__ == '__main__':
     a = Youtube_API()
