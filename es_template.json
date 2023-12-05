@@ -1,0 +1,45 @@
+{
+    "template": {
+        "settings": {
+            "index": {
+                "number_of_shards": "2",
+                "number_of_replicas": "0",
+                "routing": {
+                    "allocation": {
+                        "include": {
+                            "_tier_preference": "data_content"
+                        }
+                    }
+                }
+            }
+        },
+        "mappings": {
+            "properties": {
+                "channelId": {
+                    "type": "text"
+                },
+                "channelTitle": {
+                    "type": "keyword"
+                },
+                "publishedAt": {
+                    "type": "date"
+                },
+                "url_list": {
+                    "type": "text",
+                    "fields": {
+                        "keyword": {
+                            "type": "keyword"
+                        }
+                    },
+                    "index_options": "docs"
+                },
+                "vid_title": {
+                    "type": "text"
+                }
+            }
+        },
+        "aliases": {
+            "youtube": {}
+        }
+    }
+}
