@@ -43,7 +43,9 @@ class esHandler:
     def esInput(self, _list):
         success, failed = 0, 0
         for ok, result in helpers.streaming_bulk(
-            client=self.es_client, actions=self.generate_documents(_list)
+            client=self.es_client,
+            actions=self.generate_documents(_list),
+            raise_on_error=False,
         ):
             if not ok:
                 failed += 1
@@ -58,6 +60,7 @@ class esHandler:
             "publishedAt": "test_date",
             "channelTitle": "test_title",
             "channelId": "test_channel",
+            "description": "",
         }
         result = self.es_client.index(index="test", id=1, body=doc)
         # res = self.es_client.get(index="test", id="1")

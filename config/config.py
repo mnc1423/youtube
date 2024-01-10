@@ -26,3 +26,7 @@ def get_es_user() -> str:
 
 def get_es_password() -> str:
     return os.getenv("ES_PASS")
+
+
+def get_vt_api() -> str:
+    return os.getenv("VT_API")
